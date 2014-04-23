@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="messages">
+    {{#each texts}}
+        <li>{{ this.text }}</li>
+    {{/each}}
+</ul>
+<form>
+    <input id="text" placeholder="Say hi!" />
+    <input id="button" type="submit" />
+</form>
+
+<script src="/jquery.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect('http://localhost:3000');
+    socket.on('text', function (data) {
+        $('#messages').append($("<li/>").text(data.text))
+    });
+
+    $("#button").click(function () {
+        var text = $("#text").val()
+        $("#text").val('')
+        socket.emit('text', { 'text': text })
+        return false
+    })
+</script>
+</body>
+</html>
